@@ -29586,7 +29586,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //   ]);
 // };
 //USING JSX
-var Pet = function Pet(props) {
+const Pet = props => {
   return _react.default.createElement("div", null, _react.default.createElement("h1", null, props.name), _react.default.createElement("h2", null, props.animal), _react.default.createElement("h2", null, props.breed));
 };
 
@@ -29602,27 +29602,35 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _Pet = _interopRequireDefault(require("./Pet"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+const ANIMALS = ["bird", "dog", "cat", "reptile"];
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+const SearchParams = () => {
+  //const locationArr= useState("Seattle");
+  //const location=locationArr[0]
+  //const setLocation=locationArr[1]
+  //Above code can also be written as
+  const [location, setLocation] = (0, _react.useState)("Seattle");
+  const [animal, setAnimal] = (0, _react.useState)("");
+  const [breed, setBreed] = (0, _react.useState)("");
+  const [pets, setPets] = (0, _react.useState)([]);
+  const breeds = [];
+  (0, _react.useEffect)(() => {
+    requestPets();
+  }, []); //eslint-disable-line
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-var SearchParams = function SearchParams() {
-  var _useState = (0, _react.useState)("Seattle"),
-      _useState2 = _slicedToArray(_useState, 2),
-      location = _useState2[0],
-      setLocation = _useState2[1];
+  async function requestPets() {
+    const res = await fetch(`http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`);
+    const json = await res.json();
+    setPets(json.pets);
+  }
 
   return _react.default.createElement("div", {
     className: "search-params"
@@ -29630,17 +29638,40 @@ var SearchParams = function SearchParams() {
     htmlFor: "location"
   }, "Location", _react.default.createElement("input", {
     id: "location",
-    onChange: function onChange(event) {
-      return setLocation(event.target.value);
-    },
+    onChange: event => setLocation(event.target.value),
     value: location,
     placeholder: "Location"
-  }))));
+  })), _react.default.createElement("label", {
+    htmlFor: "animal"
+  }, "Animal", _react.default.createElement("select", {
+    id: "animals",
+    value: animal,
+    onChange: e => setAnimal(e.target.value),
+    onBlur: e => setAnimal(e.target.value)
+  }, _react.default.createElement("option", null), ANIMALS.map(animal => _react.default.createElement("option", {
+    value: animal,
+    key: animal
+  }, animal)))), _react.default.createElement("label", {
+    htmlFor: "breeds"
+  }, "Breeds", _react.default.createElement("select", {
+    id: "breeds",
+    value: breed,
+    onChange: e => setBreed(e.target.value),
+    onBlur: e => setBreed(e.target.value)
+  }, _react.default.createElement("option", null), breeds.map(breed => _react.default.createElement("option", {
+    value: breed,
+    key: breed
+  }, breed)))), _react.default.createElement("button", null, "Submit")), pets.map(pet => _react.default.createElement(_Pet.default, {
+    name: pet.name,
+    animal: pet.animal,
+    breed: pet.breed,
+    key: pet.id
+  })));
 };
 
 var _default = SearchParams;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js"}],"App.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./Pet":"Pet.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -29672,7 +29703,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // //And now here we can't just pass a abstract stamp we have to create a instance
 // //of stamp thus we are using createElement tag here again
 // ReactDOM.render(React.createElement(App), document.getElementById("root"));
-var App = function App() {
+const App = () => {
   return _react.default.createElement("div", null, _react.default.createElement("h1", null, "Adopt Me!"), _react.default.createElement(_SearchParam.default, null));
 };
 
@@ -29705,7 +29736,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "1136" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "9506" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
