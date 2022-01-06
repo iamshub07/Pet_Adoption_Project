@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { render } from "react-dom";
 import { StrictMode } from "react";
 import Pet from "./Pet";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import SearchParams from "./SearchParam";
-import Details from "./Deatils";
+import Details from "./Details";
+import ThemeContext from "./ThemeContext";
 
 // //We are creating App React element can be matched to class in java
 // //we can create n no of insatance of it also can be said as stamp
@@ -27,25 +28,28 @@ import Details from "./Deatils";
 // ReactDOM.render(React.createElement(App), document.getElementById("root"));
 
 const App = () => {
+  const theme = useState("darkblue");
   return (
     <StrictMode>
-      <div>
-        <Router>
-          <header>
-            <Link to="/">
-              <h1>Adopt Me!</h1>
-            </Link>
-          </header>
-          <Switch>
-            <Route path="/details/:id">
-              <Details />
-            </Route>
-            <Route path="/">
-              <SearchParams />
-            </Route>
-          </Switch>
-        </Router>
-      </div>
+      <ThemeContext.Provider value={theme}>
+        <div>
+          <Router>
+            <header>
+              <Link to="/">
+                <h1>Adopt Me!</h1>
+              </Link>
+            </header>
+            <Switch>
+              <Route path="/details/:id">
+                <Details />
+              </Route>
+              <Route path="/">
+                <SearchParams />
+              </Route>
+            </Switch>
+          </Router>
+        </div>
+      </ThemeContext.Provider>
     </StrictMode>
   );
 };
